@@ -38,6 +38,7 @@ pipeline {
         stage('Test') {
             steps {
                 sh """
+                    docker rm -f test-pipeline || true
                     docker run -d --name test-pipeline ${IMAGE_NAME}:${env.APP_VERSION}
                     sleep 5
                     CONTAINER_IP=\$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' test-pipeline)
