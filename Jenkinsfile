@@ -38,9 +38,10 @@ pipeline {
         stage('Test') {
             steps {
                 sh """
-                    docker run -d --name test-pipeline -p 8095:8080 ${IMAGE_NAME}:${env.APP_VERSION}
+                    docker run -d --name test-pipeline ${IMAGE_NAME}:${env.APP_VERSION}
                     sleep 5
-                    curl -f http://localhost:8095 || exit 1
+                    CONTAINER_IP=\$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' test-pipeline)
+                    curl -f http://\$CONTAINER_IP:8080 || exit 1
                     docker stop test-pipeline
                     docker rm test-pipeline
                 """
