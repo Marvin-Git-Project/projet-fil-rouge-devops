@@ -1,0 +1,8 @@
+# Namespace dedie au projet IC GROUP
+# Toutes les ressources du projet seront creees dans ce namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: icgroup
+  labels:
+    env: prod

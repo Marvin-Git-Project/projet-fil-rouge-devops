@@ -1,0 +1,24 @@
+# ConfigMap contenant le fichier servers.json
+# pour pre-configurer la connexion pgAdmin -> BDD Odoo
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin-servers-config
+  namespace: icgroup
+  labels:
+    env: prod
+data:
+  servers.json: |
+    {
+      "Servers": {
+        "1": {
+          "Name": "Odoo Database",
+          "Group": "Servers",
+          "Host": "odoo-db-service",
+          "Port": 5432,
+          "MaintenanceDB": "postgres",
+          "Username": "odoo",
+          "SSLMode": "prefer"
+        }
+      }
+    }

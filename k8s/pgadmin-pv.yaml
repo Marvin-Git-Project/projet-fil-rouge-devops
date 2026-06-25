@@ -1,0 +1,15 @@
+# Volume persistant pour stocker les donnees/parametres de pgAdmin
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pgadmin-pv
+  labels:
+    env: prod
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 500Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data/pgadmin

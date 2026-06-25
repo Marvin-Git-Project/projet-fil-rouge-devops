@@ -1,0 +1,15 @@
+# Volume persistant pour stocker les donnees PostgreSQL d'Odoo
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: odoo-db-pv
+  labels:
+    env: prod
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data/odoo-db

@@ -1,0 +1,15 @@
+# Demande d'utilisation du volume persistant pgadmin-pv
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pgadmin-pvc
+  namespace: icgroup
+  labels:
+    env: prod
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi

@@ -1,0 +1,38 @@
+# Deployment de l'application Odoo
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odoo-app
+  namespace: icgroup
+  labels:
+    app: odoo-app
+    env: prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: odoo-app
+  template:
+    metadata:
+      labels:
+        app: odoo-app
+        env: prod
+    spec:
+      containers:
+        - name: odoo-app
+          image: odoo:13.0
+          ports:
+            - containerPort: 8069
+          env:
+            - name: HOST
+              value: odoo-db-service
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: odoo-db-secret
+                  key: POSTGRES_USER
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: odoo-db-secret
+                  key: POSTGRES_PASSWORD

@@ -1,0 +1,15 @@
+# Service interne pour exposer PostgreSQL aux autres pods du cluster
+apiVersion: v1
+kind: Service
+metadata:
+  name: odoo-db-service
+  namespace: icgroup
+  labels:
+    env: prod
+spec:
+  selector:
+    app: odoo-db
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP

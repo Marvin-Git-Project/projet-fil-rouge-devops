@@ -1,0 +1,16 @@
+# Service NodePort - expose ic-webapp vers l'exterieur du cluster
+apiVersion: v1
+kind: Service
+metadata:
+  name: ic-webapp-service
+  namespace: icgroup
+  labels:
+    env: prod
+spec:
+  selector:
+    app: ic-webapp
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30090
+  type: NodePort

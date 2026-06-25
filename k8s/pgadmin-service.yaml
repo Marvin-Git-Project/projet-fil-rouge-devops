@@ -1,0 +1,15 @@
+# Service interne pour exposer pgAdmin aux autres pods du cluster
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin-service
+  namespace: icgroup
+  labels:
+    env: prod
+spec:
+  selector:
+    app: pgadmin
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP

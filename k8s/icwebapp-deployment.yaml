@@ -1,0 +1,27 @@
+# Deployment du site vitrine ic-webapp
+# Utilise les URLs definies dans releases.txt (sites officiels Odoo/pgAdmin),
+# comme en Partie 1 et Partie 2 - assure la portabilite de l'image
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ic-webapp
+  namespace: icgroup
+  labels:
+    app: ic-webapp
+    env: prod
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ic-webapp
+  template:
+    metadata:
+      labels:
+        app: ic-webapp
+        env: prod
+    spec:
+      containers:
+        - name: ic-webapp
+          image: marvindocker28/ic-webapp:1.1
+          ports:
+            - containerPort: 8080

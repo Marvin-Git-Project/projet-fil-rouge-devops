@@ -1,0 +1,15 @@
+# Demande d'utilisation du volume persistant odoo-db-pv
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: odoo-db-pvc
+  namespace: icgroup
+  labels:
+    env: prod
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

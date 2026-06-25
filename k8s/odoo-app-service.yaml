@@ -1,0 +1,15 @@
+# Service interne pour exposer Odoo aux autres pods du cluster
+apiVersion: v1
+kind: Service
+metadata:
+  name: odoo-app-service
+  namespace: icgroup
+  labels:
+    env: prod
+spec:
+  selector:
+    app: odoo-app
+  ports:
+    - port: 8069
+      targetPort: 8069
+  type: ClusterIP

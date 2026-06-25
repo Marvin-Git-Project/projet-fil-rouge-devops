@@ -1,0 +1,35 @@
+# Deployment de la base de donnees PostgreSQL utilisee par Odoo
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odoo-db
+  namespace: icgroup
+  labels:
+    app: odoo-db
+    env: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: odoo-db
+  template:
+    metadata:
+      labels:
+        app: odoo-db
+        env: prod
+    spec:
+      containers:
+        - name: odoo-db
+          image: postgres:13
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: odoo-db-secret
+          volumeMounts:
+            - name: odoo-db-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: odoo-db-storage
+          persistentVolumeClaim:
+            claimName: odoo-db-pvc
