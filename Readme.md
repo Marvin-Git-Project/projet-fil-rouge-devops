@@ -1373,4 +1373,4 @@ Solution : declenchement manuel de l'import via le script fourni par l'image (se
 ## Auteur
 
 Projet realise par **Marvin-Git-Project**
-Dans le cadre d'un bootcamp propose par **Eazytraining**
+Dans le cadre d'un bootcamp proposé par **Eazytraining**
