@@ -1,5 +1,5 @@
 // Pipeline CI/CD - Projet Fil Rouge IC GROUP
-// Build, test et deploiement de l'application ic-webapp
+// Build, test, push, provisionnement Terraform et deploiement Ansible
 
 pipeline {
     agent any
@@ -58,13 +58,54 @@ pipeline {
             }
         }
 
+        stage('Terraform') {
+            steps {
+                withCredentials([
+                    string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')
+                ]) {
+                    sshagent(credentials: ['ssh-ansible-key']) {
+                        sh """
+                            ssh -o StrictHostKeyChecking=no ubuntu@52.47.143.52 '
+                                export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+                                export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+                                cd ~/terraform
+                                terraform init -input=false
+                                terraform apply -auto-approve -input=false
+                            '
+                        """
+                    }
+                }
+            }
+        }
+
         stage('Deploy') {
             steps {
-                sshagent(credentials: ['ssh-ansible-key']) {
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ubuntu@52.47.143.52 \
-                        'cd ~/ansible-icgroup && ansible-playbook -i hosts deploy.yml'
-                    """
+                withCredentials([
+                    string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')
+                ]) {
+                    sshagent(credentials: ['ssh-ansible-key']) {
+                        sh """
+                            ssh -o StrictHostKeyChecking=no ubuntu@52.47.143.52 '
+                                export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+                                export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+                                cd ~/terraform
+                                IP_APP=\$(terraform output -raw ip_app_pgadmin)
+                                IP_ODOO=\$(terraform output -raw ip_odoo)
+                                cd ~/ansible-icgroup
+                                cat > hosts << INVENTORY
+[app_pgadmin]
+serveur2 ansible_host=\$IP_APP ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/projet-fil-rouge-key.pem
+
+[odoo]
+serveur3 ansible_host=\$IP_ODOO ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/projet-fil-rouge-key.pem
+INVENTORY
+                                sleep 60
+                                ansible-playbook -i hosts deploy.yml
+                            '
+                        """
+                    }
                 }
             }
         }
