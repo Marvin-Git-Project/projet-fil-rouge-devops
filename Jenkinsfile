@@ -102,7 +102,7 @@ serveur2 ansible_host=\$IP_APP ansible_user=ubuntu ansible_ssh_private_key_file=
 serveur3 ansible_host=\$IP_ODOO ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/projet-fil-rouge-key.pem
 INVENTORY
                                 sleep 60
-                                ansible-playbook -i hosts deploy.yml
+                                ansible-playbook -i hosts deploy.yml --ssh-extra-args="-o StrictHostKeyChecking=no"
                             '
                         """
                     }
