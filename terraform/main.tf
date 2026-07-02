@@ -40,7 +40,7 @@ resource "aws_instance" "odoo" {
 
 # Security Group pour le serveur app+pgAdmin
 resource "aws_security_group" "sg_app_pgadmin" {
-  name        = "sg-app-pgadmin-tf"
+  name        = "icgroup-app-pgadmin-tf"
   description = "Security Group pour le serveur app+pgAdmin"
 
   ingress {
@@ -74,7 +74,7 @@ resource "aws_security_group" "sg_app_pgadmin" {
 
 # Security Group pour le serveur Odoo
 resource "aws_security_group" "sg_odoo" {
-  name        = "sg-odoo-tf"
+  name        = "icgroup-odoo-tf"
   description = "Security Group pour le serveur Odoo"
 
   ingress {
